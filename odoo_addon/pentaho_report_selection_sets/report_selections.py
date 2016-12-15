@@ -7,13 +7,13 @@ import json
 
 from lxml import etree
 
-from openerp import models, fields, api, _
-from openerp.exceptions import ValidationError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.misc import frozendict
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import frozendict
 
-from openerp.addons.pentaho_reports.java_oe import *
-from openerp.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
+from odoo.addons.pentaho_reports.java_odoo import *
+from odoo.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
 
 from report_formulae import *
 
@@ -112,7 +112,7 @@ class selection_set_detail(models.Model):
     variable = fields.Char(string='Variable Name', size=64, readonly=True)
     label = fields.Char(string='Label', size=64, readonly=True)
     counter = fields.Integer(string='Parameter Number', readonly=True)
-    type = fields.Selection(OPENERP_DATA_TYPES, string='Data Type', readonly=True)
+    type = fields.Selection(ODOO_DATA_TYPES, string='Data Type', readonly=True)
     x2m = fields.Boolean(string='Data List Type')
     display_value = fields.Text(string='Value')
     calc_formula = fields.Char(string='Formula')

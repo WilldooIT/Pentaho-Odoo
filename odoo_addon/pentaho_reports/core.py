@@ -5,21 +5,21 @@
 import xmlrpclib
 import base64
 
-from openerp import netsvc
-from openerp import pooler
-from openerp import report
-from openerp import models, fields, _
-from openerp.exceptions import except_orm
-from openerp.tools import config
+from odoo import netsvc
+from odoo import pooler
+from odoo import report
+from odoo import models, fields, _
+from odoo.exceptions import except_orm
+from odoo.tools import config
 import logging
 import time
-import openerp
+import odoo
 from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp import SUPERUSER_ID
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import SUPERUSER_ID
 
-from .java_oe import JAVA_MAPPING, check_java_list, PARAM_VALUES, RESERVED_PARAMS
-from openerp.addons.pentaho_reports.core_newapi import SKIP_DATE
+from .java_odoo import JAVA_MAPPING, check_java_list, PARAM_VALUES, RESERVED_PARAMS
+from odoo.addons.pentaho_reports.core_newapi import SKIP_DATE
 
 _logger = logging.getLogger(__name__)
 
@@ -133,21 +133,22 @@ def get_proxy_args(instance, cr, uid, prpt_content, context_vars={}):
     current_user = pool.get('res.users').browse(cr, uid, uid)
     config_obj = pool.get('ir.config_parameter')
 
-    proxy_url = config_obj.get_param(cr, uid, 'pentaho.server.url', default='http://localhost:8080/pentaho-reports-for-openerp')
+    proxy_url = config_obj.get_param(cr, uid, 'pentaho.server.url', default='http://localhost:8080/pentaho-server-for-odoo')
 
-    xml_interface = config_obj.get_param(cr, uid, 'pentaho.openerp.xml.interface', default='').strip() or config['xmlrpc_interface'] or 'localhost'
-    xml_port = config_obj.get_param(cr, uid, 'pentaho.openerp.xml.port', default='').strip() or str(config['xmlrpc_port'])
+    xml_interface = config_obj.get_param(cr, uid, 'pentaho.odoo.xml.interface', default='').strip() or config['xmlrpc_interface'] or 'localhost'
+    xml_port = config_obj.get_param(cr, uid, 'pentaho.odoo.xml.port', default='').strip() or str(config['xmlrpc_port'])
 
     password_to_use = pool.get('res.users').pentaho_pass_token(cr, uid, uid)
 
     proxy_argument = {
                       'prpt_file_content': xmlrpclib.Binary(prpt_content),
-                      'connection_settings': {'openerp': {'host': xml_interface,
-                                                          'port': xml_port,
-                                                          'db': cr.dbname,
-                                                          'login': current_user.login,
-                                                          'password': password_to_use,
-                                                          }},
+                      'connection_settings': {'odoo': {'host': xml_interface,
+                                                       'port': xml_port,
+                                                       'db': cr.dbname,
+                                                       'login': current_user.login,
+                                                       'password': password_to_use,
+                                                       },
+                                              },
                       'report_parameters': dict([(param_name, param_formula(instance, cr, uid, context_vars)) for (param_name, param_formula) in RESERVED_PARAMS.iteritems() if param_formula(instance, cr, uid, context_vars)]),
                       }
 
@@ -167,7 +168,7 @@ def get_proxy_args(instance, cr, uid, prpt_content, context_vars={}):
     return proxy_url, proxy_argument
 
 def clean_proxy_args(instance, cr, uid, prpt_content, proxy_argument):
-    pooler.get_pool(cr.dbname).get('res.users').pentaho_undo_token(cr, uid, uid, proxy_argument.get('connection_settings',{}).get('openerp',{}).get('password',''))
+    pooler.get_pool(cr.dbname).get('res.users').pentaho_undo_token(cr, uid, uid, proxy_argument.get('connection_settings',{}).get('odoo',{}).get('password',''))
 
 
 class Report(object):
@@ -245,9 +246,9 @@ class Report(object):
         return (rendered_report, output_type)
 
 
-class PentahoReportOpenERPInterface(report.interface.report_int):
+class PentahoReportOdooInterface(report.interface.report_int):
     def __init__(self, name):
-        super(PentahoReportOpenERPInterface, self).__init__(name)
+        super(PentahoReportOdooInterface, self).__init__(name)
 
     def create(self, cr, uid, ids, data, context):
         name = self.name
@@ -356,9 +357,9 @@ class ir_actions_report_xml(models.Model):
         # First lookup in the deprecated place, because if the report definition
         # has not been updated, it is more likely the correct definition is there.
         # Only reports with custom parser specified in Python are still there.
-        if SERVICE_NAME_PREFIX + name in openerp.report.interface.report_int._reports:
-            new_report = openerp.report.interface.report_int._reports[SERVICE_NAME_PREFIX + name]
-            if not isinstance(new_report, PentahoReportOpenERPInterface):
+        if SERVICE_NAME_PREFIX + name in odoo.report.interface.report_int._reports:
+            new_report = odoo.report.interface.report_int._reports[SERVICE_NAME_PREFIX + name]
+            if not isinstance(new_report, PentahoReportOdooInterface):
                 new_report = None
         else:
             cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'pentaho'))
@@ -367,7 +368,7 @@ class ir_actions_report_xml(models.Model):
 #                 new_report = WebKitParser('report.'+r['report_name'],
 #                     r['model'], opj('addons',r['report_rml'] or '/'),
 #                     header=r['header'], register=False, **kwargs)
-                new_report = PentahoReportOpenERPInterface(SERVICE_NAME_PREFIX+r['report_name'])
+                new_report = PentahoReportOdooInterface(SERVICE_NAME_PREFIX+r['report_name'])
             else:
                 new_report = None
 

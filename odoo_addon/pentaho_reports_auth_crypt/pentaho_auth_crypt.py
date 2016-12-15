@@ -1,6 +1,6 @@
-from openerp import models, fields, api, _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp
+from odoo import models, fields, api, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import odoo
 from datetime import datetime, timedelta
 import random, string
 
@@ -23,7 +23,7 @@ class ResUsersPentahoCrypt(models.Model):
         self.remove_temporary_password_pentaho(password)
 
     def create_temporary_password_pentaho(self):
-        new_cr = openerp.registry(self.env.cr.dbname).cursor()
+        new_cr = odoo.registry(self.env.cr.dbname).cursor()
         pword = ''.join(random.choice(string.ascii_letters + string.digits + '!@#$%^&*()') for x in range(64))
 
         env = api.Environment(new_cr, self.env.uid, self.env.context)
@@ -43,7 +43,7 @@ class ResUsersPentahoCrypt(models.Model):
         return super(ResUsersPentahoCrypt, self).check_credentials(cr, uid, password)
 
     def remove_temporary_password_pentaho(self, value):
-        new_cr = openerp.registry(self.env.cr.dbname).cursor()
+        new_cr = odoo.registry(self.env.cr.dbname).cursor()
         env = api.Environment(new_cr, self.env.uid, self.env.context)
         # also get rid of tokens that are over 24 hours old...
         recs = env['pentaho.auth.crypt'].search(['|', '&',

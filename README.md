@@ -1,7 +1,8 @@
 ## A Summary of Recent Changes
 
-A more detailed description of changes can be found on the [Pentaho Report for OpenERP wiki](https://github.com/WillowIT/Pentaho-reports-for-OpenERP/wiki/Significant-Changes "Pentaho Reports for OpenERP Wiki")
+A more detailed description of changes can be found on the [Pentaho Report for Odoo wiki](https://github.com/WilldooIT/Pentaho-Odoo/wiki/Significant-Changes "Pentaho Reports for Odoo Wiki")
 
+* December 2016 - Repository rename to Pentaho-Odoo in preparation for version 10.0 development.  Company references changed to WilldooIT.  Note: Not tested at all yet with version 10!
 * February 2016 - Upgrade to support Odoo version 9.0.
 * September 2015 - Overcome previous limitation - Now works with the auth_crypt module turned on.
 * August 2015 - Remove need for special duplicated "Pentaho user" - a limitation has been introduced for object based reports with password encryption turned on - work-around in pipeline.
@@ -21,19 +22,22 @@ A more detailed description of changes can be found on the [Pentaho Report for O
 * November 2013 - Pentaho Report Actions better integrated to standard OpenERP Report Actions.
 * January 2013 - Upgrade to support OpenERP version 7.0.
 
-# Pentaho Reports for OpenERP
+# Pentaho Reports for Odoo
 
-This project provides a system that integrates OpenERP with the Pentaho reporting system. End users of OpenERP can design reports using Pentaho report designer v5.0 through v5.4, and install/access them from inside the OpenERP interface. 
+This project provides a system that integrates Odoo with the Pentaho reporting system. End users of Odoo can design reports using Pentaho report designer v5.0 through v5.4, and install/access them from inside the Odoo interface.
+
+This project carries on from the previoust Pentaho Reports for OpenERP.
 
 ### Features:
-* Support for OpenERP 6.1, 7.0, 8.0, and 9.0.
-* OpenERP data can be accessed via SQL, objects, custom python procedures, or via "Pentaho Data Integration" tools.
-* Report parameters specified in the designer are automatically prompted for when the report is run from OpenERP.
+* Support for Odoo 9.0.
+* Support for OpenERP 6.1, 7.0, and 8.0.
+* Odoo data can be accessed via SQL, objects, custom python procedures, or via "Pentaho Data Integration" tools.
+* Report parameters specified in the designer are automatically prompted for when the report is run from Odoo.
 * Parameters can be generated dynamically from various data sources. 
 
 _Pentaho Report designer_ is the software separate from this project that is used to design the report templates. You can download the designer [here](http://sourceforge.net/projects/pentaho/files/Report%20Designer/ "Pentaho Report Designer").
 
-We have prepared a number of instructional videos for using this project with OpenERP [here](https://www.youtube.com/user/WillowITMedia "Willow on Youtube"). The videos provide instructions for creating reports based upon SQL and the OpenERP object data sources, and explain how to install them in OpenERP.
+We have prepared a number of instructional videos for using this project with Odoo [here](https://www.youtube.com/user/WillowITMedia "Willow on Youtube"). The videos provide instructions for creating reports based upon SQL and the Odoo object data sources, and explain how to install them in Odoo.  Videos were made with a much older version of OpenERP, but are still relevant and useful.
 
 Keep in mind that while these videos are for version 3.9 of the designer, they are still applicable. 
 
@@ -49,11 +53,11 @@ This project encompasses two separate components:
 
 ### The Java Component
 
-This is a Java web application that can be deployed in a suitable container such as [Apache Tomcat](http://tomcat.apache.org/ "Apache Tomcat"). This component does the actual rendering of the reports based upon the definitions created in the [Pentaho Report Designer](http://sourceforge.net/projects/pentaho/files/Report%20Designer/ "Pentaho Report Designer"), which is separate from this project. The Java Server communicates with OpenERP to retrieve the required data, and works with the OpenERP module (described below) to prompt the user for any required parameters, and provide selections for these parameters.
+This is a Java web application that can be deployed in a suitable container such as [Apache Tomcat](http://tomcat.apache.org/ "Apache Tomcat"). This component does the actual rendering of the reports based upon the definitions created in the [Pentaho Report Designer](http://sourceforge.net/projects/pentaho/files/Report%20Designer/ "Pentaho Report Designer"), which is separate from this project. The Java Server communicates with Odoo to retrieve the required data, and works with the Odoo module (described below) to prompt the user for any required parameters, and provide selections for these parameters.
 
-### The OpenERP Module
+### The Odoo Module
 
-The other component in this project is the OpenERP Module. This module allows OpenERP to communicate with the Java Server to render reports created with the Report Designer. For a more detailed explanation, look at the description of the module in OpenERP, or [here](https://github.com/WillowIT/Pentaho-reports-for-OpenERP/blob/version70/openerp_addon/pentaho_reports/__openerp__.py "__openerp__.py in Pentaho OpenERP Module"). 
+The other component in this project is the Odoo Module. This module allows Odoo to communicate with the Java Server to render reports created with the Report Designer. For a more detailed explanation, look at the description of the module in Odoo, or [here](https://github.com/WilldooIT/Pentaho-Odoo/blob/version10/odoo_addon/pentaho_reports/__manifest__.py "__manifest__.py in Pentaho Odoo Module"). 
 
 ## Quick Start
 
@@ -63,9 +67,9 @@ The report server needs to be installed and running. The quickest and easiest wa
 
 The report server needs an application container such as [Apache Tomcat](http://tomcat.apache.org/ "Apache Tomcat") for it to run in. Installation and deployment on Tomcat or any other application container is beyond the scope of this document, however the Tomcat website has very detailed documentation on how to do so. 
 
-The OpenERP module needs to be installed and configured, as explained [here](#the-openerp-module-1). 
+The Odoo module needs to be installed and configured, as explained [here](#the-odoo-module-1). 
 
-Finally, you will need to deploy your reports. Instructions for doing this can be found in the [module description](https://github.com/WillowIT/Pentaho-reports-for-OpenERP/blob/version70/openerp_addon/pentaho_reports/__openerp__.py "__openerp__.py in Pentaho OpenERP Module") under the "Report Actions" heading. 
+Finally, you will need to deploy your reports. Instructions for doing this can be found in the [module description](https://github.com/WilldooIT/Pentaho-Odoo/blob/version10/odoo_addon/pentaho_reports/__manifest__.py "__manifest__.py in Pentaho Odoo Module") under the "Report Actions" heading. 
 
 
 
@@ -89,42 +93,42 @@ The standalone test server running on port 8090 can be started after a successfu
 
 For production deployment, however, it is recommended that the server be hosted in an application container. Instructions on how to deploy the war file on Tomcat can be found [here](http://tomcat.apache.org/tomcat-6.0-doc/deployer-howto.html#Deploying_using_the_Tomcat_Manager "Deploying Using Tomcat").
 
-### The OpenERP Module
+### The Odoo Module
 
-This module is installed like any other OpenERP module. Briefly:
+This module is installed like any other Odoo module. Briefly:
 
-* Place the 'openerp_addon' folder on the filesystem, somewhere that is accessible to the OpenERP server.
-* Update 'openerp-server.conf' file, and include the full path to this folder on the 'addons_path' line.
-* Restart OpenERP and log in as a user with administrator rights.
+* Place the 'odoo_addon' folder on the filesystem, somewhere that is accessible to the Odoo server.
+* Update 'odoo-server.conf' file, and include the full path to this folder on the 'addons_path' line.
+* Restart Odoo and log in as a user with administrator rights.
 * Go to Settings -> Update Modules List and click Update.
 * Go to Settings -> Installed Modules, remove the 'Installed Modules' filter and search for 'pentaho'.
-* Install the 'Pentaho reports for OpenERP' module.
+* Install the 'Pentaho Reports for Odoo' module.
 
-After installation, the module still needs to be configured. Refer to the [module description](https://github.com/WillowIT/Pentaho-reports-for-OpenERP/blob/version70/openerp_addon/pentaho_reports/__openerp__.py "__openerp__.py in Pentaho OpenERP Module") for detailed instructions on how to do this. 
+After installation, the module still needs to be configured. Refer to the [module description](https://github.com/WilldooIT/Pentaho-Odoo/blob/version10/odoo_addon/pentaho_reports/__manifest__.py "__manifest__.py in Pentaho Odoo Module") for detailed instructions on how to do this. 
 
 
 ## Appendices
 
-### Integrating and Defining Reports to OpenERP
+### Integrating and Defining Reports to Odoo
 
-The description of the OpenERP module contains an overview of creating report actions, as well as defining and using report parameters.
+The description of the Odoo module contains an overview of creating report actions, as well as defining and using report parameters.
 
 ### Concurrency Issue When Using Email Template
 
-When generating a Pentaho report at the same time as parsing the email template, OpenERP might raise the following exception:
+When generating a Pentaho report at the same time as parsing the email template, Odoo might raise the following exception:
 
     TransactionRollbackError: could not serialize access due to concurrent update
 
-The OpenERP module 'willow_pentaho_email_patch' works around this issue. However, it is not a perfect solution to the problem and we are open to suggestions and pull requests.
+The Odoo module 'willow_pentaho_email_patch' works around this issue. However, it is not a perfect solution to the problem and we are open to suggestions and pull requests.
 
 ### Contributors
 
-This project was developed by Willow IT, using the libraries and extensions developed by De Bortoli Wines, Australia (Pieter van der Merwe in particular) for the Pentaho reporting system. The OpenERP addon also derives from and/or is inspired by the Jasper Reports addon developed by NaN-tic.
+This project was developed by Willdoo IT (formerly Willow IT), using the libraries and extensions developed by De Bortoli Wines, Australia (Pieter van der Merwe in particular) for the Pentaho reporting system. The Odoo addon also derives from and/or is inspired by the Jasper Reports addon developed by NaN-tic.
 
-Willow IT contributions:
+Willdoo IT contributions:
 
+* Richard deMeester - frontend and core functions, automated wizard and action implementation, documentation and videos, ongoing maintenance and development
 * Deepak Seshadri - OpenERP-Pentaho server connector (Java)
-* Richard deMeester - frontend and core functions, automated wizard and action implementation, documentation and videos
 * Douglas Parker - additional integration
 * Jon Wilson - inspiration, testing, and whipping
 * Thomas Cook - documentation
@@ -134,9 +138,6 @@ Willow IT contributions:
 
 This project has been developed over time to meet specific requirements as we have needed to meet them. If something is wrong, or you have suggestions, please contribute via the git issues tab, or let us know at:
 
-	support@willowit.com.au
+	richardd@willdooit.com
 
 
-## Report Library
-
-We will be endeavouring to create a library of sample and useful reports. Check at [http:www.willowit.com.au](http://www.willowit.com.au/ "WillowIT Homepage") where we will announce when and where this is available. In the meantime, if you develop any reports or templates that you would consider worth sharing, please email them through with some description or details.

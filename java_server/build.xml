@@ -7,7 +7,7 @@
   
   See build-res/subfloor.xml for more details
 ============================================================================-->
-<project name="pentaho-reports-for-openerp" basedir="." default="default">
+<project name="pentaho-reports-for-odoo" basedir="." default="default">
 
     <property file="${user.home}/.pentaho-reporting-build-settings.properties"
               description="Per user override settings-file for all pentaho-reporting projects."/>
