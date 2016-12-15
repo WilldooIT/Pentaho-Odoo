@@ -5,11 +5,11 @@ from dateutil import parser
 import pytz
 import json
 
-from openerp import models, fields, _, api
-from openerp.exceptions import ValidationError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import models, fields, _, api
+from odoo.exceptions import ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
-from openerp.addons.pentaho_reports.java_oe import *
+from odoo.addons.pentaho_reports.java_odoo import *
 
 from report_formulae_definitions import *
 
@@ -355,7 +355,7 @@ class selection_set_formula(models.Model):
         for operand_dictionary in operands[1:]:
             op_op, op_type, op_2m, op_result = self.eval_operand(operand_dictionary, known_variables)
             result_dtm = eval('result_dtm %s to_timedelta(op_result, op_type, op_2m)' % (op_op,))
-        # OpenERP will assume datetimes are UTC, but here they are local!
+        # Odoo will assume datetimes are UTC, but here they are local!
         if result_dtm_type == TYPE_TIME:
             result_dtm = result_dtm.astimezone(pytz.timezone('UTC'))
         elif expected_type == TYPE_TIME:

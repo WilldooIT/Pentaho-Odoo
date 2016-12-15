@@ -1,20 +1,25 @@
 # -*- encoding: utf-8 -*-
+
 {
-    "name": "Pentaho Reports for OpenERP",
+    "name": "Pentaho Reports for Odoo",
+    "version": "2.0",
+    "summary": 'Pentaho Report Integration'
     "description": """
-Pentaho - OpenERP Report Integration by Willow IT
-=================================================
-This module integrates Pentaho's reporting engine with OpenERP.
+Pentaho - Odoo Report Integration by Willdoo IT
+===============================================
 
-This project was developed by Willow IT, using the libraries and extensions developed by De Bortoli Wines,
-Australia (Pieter van der Merwe in particular) for the Pentaho reporting system. The OpenERP addon also derives
-from and/or is inspired by the Jasper Reports addon developed by NaN-tic.
+This module integrates Pentaho's reporting engine with Odoo.
 
-Willow IT contributions:
+This project was developed by Willdoo IT (formerly Willow IT), using the libraries and extensions developed by 
+De Bortoli Wines, Australia (Pieter van der Merwe in particular) for the Pentaho reporting system. The Odoo
+addon also derives from and/or is inspired by the Jasper Reports addon developed by NaN-tic.
 
-* Deepak Seshadri - OpenERP-Pentaho server connector (Java)
+Willdoo IT contributions:
 
-* Richard deMeester - front-end and core functions, automated wizard and action implementation
+* Richard deMeester - front-end and core functions, automated wizard and action implementation, support modules,
+and ongoing maintenance and developtment
+
+* Deepak Seshadri - Odoo-Pentaho server connector (Java)
 
 * Douglas Parker - additional integration
 
@@ -26,7 +31,7 @@ Report Designer and Java Component
 For notes on installing and running the report designer, 3.9, refer to:
     **http://bit.ly/L4wPoC**
 
-Report designer version 5.0 and higher includes the OpenERP datasource. It can be installed and used without the
+Report designer version 5.0 and higher includes the Odoo datasource. It can be installed and used without the
 need for additional components.
 
 The README document contains instructions relevant to building and running the java component.
@@ -34,16 +39,16 @@ The README document contains instructions relevant to building and running the j
 
 Report Types
 ------------
-Broadly speaking, two types of data sources can be used to produce the reports. OpenERP object data sources or SQL
+Broadly speaking, two types of data sources can be used to produce the reports. Odoo object data sources or SQL
 query data sources.
 
-* Object data sources have the advantage that they can use OpenERP model columns, even those that are not stored
+* Object data sources have the advantage that they can use Odoo model columns, even those that are not stored
   in the database. This includes functional fields, related fields, properties. They can iterate through one2many
-  and many2many subfields. They also respect OpenERP record rules.
+  and many2many subfields. They also respect Odoo record rules.
 
 * SQL data sources have the advantage that they allow greater flexibility in selections, and other SQL features
-  like grouping and selective inclusion of sub-queries. It also allows selection where no OpenERP model
-  relationship exists. It does not respect OpenERP record rules, which may be seen as an advantage for creating
+  like grouping and selective inclusion of sub-queries. It also allows selection where no Odoo model
+  relationship exists. It does not respect Odoo record rules, which may be seen as an advantage for creating
   summary type reports which may be run by users who may not be able to view low-level data. Because of this, you
   need to be careful.
 
@@ -66,7 +71,7 @@ This list of reserved parameters is available for use is all data sources, even 
 parameter selections, therefore allowing meaningful selections for other parameters.
 
 Most Pentaho report parameter types and features have been mapped, where practicable, to something which makes
-sense to an OpenERP environment. This means that a number of Java data types don't necessarily differentiate.
+sense to an Odoo environment. This means that a number of Java data types don't necessarily differentiate.
 For example, (Integer / Long / Short / BigInteger / et al) will all be treated as integers.
 
 Default values can be passed for the parameters, and may default value formulae work.
@@ -78,9 +83,9 @@ Pentaho default, or can be sent to the report in the context in the format:
 
 where the passed dictionary contains the parameter names as keys. See below for guidance on where to set this up.
 
-Pentaho Display Types have been consolidated.  Drop Down, Single Value List, etc, all display as OpenERP selection
+Pentaho Display Types have been consolidated.  Drop Down, Single Value List, etc, all display as Odoo selection
 pull downs. Some Pentaho multi value selection types, such as Check Box, etc, are implemented as single value
-selection pull downs. Date Picker uses the standard OpenERP date/time widget.  Pentaho multi value lists are
+selection pull downs. Date Picker uses the standard Odoo date/time widget.  Pentaho multi value lists are
 implemented as many2manytag widgets, and support integer, string, and numeric data types.
 
 Other Pentaho parameter features should be considered unsupported, such as Post-Processing Formula, Display Value
@@ -96,12 +101,12 @@ The address of the Pentaho server which is used to render the report is defined 
     **pentaho.server.url**
 
 For object based data sources, the Pentaho server will use XML-RPC to connect to the current database using the
-interface and port as defined in the OpenERP config file, and the reporting user's credentials.
+interface and port as defined in the Odoo config file, and the reporting user's credentials.
 
 If not defined in the config file, the interface and port can be defined with the parameters:
 
-* pentaho.openerp.xml.interface
-* pentaho.openerp.xml.port
+* pentaho.odoo.xml.interface
+* pentaho.odoo.xml.port
 
 For SQL query based data sources, the Pentaho server will use the following parameters:
 
@@ -113,11 +118,11 @@ For SQL query based data sources, the Pentaho server will use the following para
 
 Report Actions
 --------------
-Reports are defined to OpenERP under **Settings/Technical/Low Level Objects/Actions/Reports**.  This is the place
-where standard OpenERP report actions are defined. Selecting the appropriate checkbox can convert existing report
+Reports are defined to Odoo under **Settings/Technical/Low Level Objects/Actions/Reports**.  This is the place
+where standard Odoo report actions are defined. Selecting the appropriate checkbox can convert existing report
 actions to Pentaho Report Actions.
 
-Reports can be handled by OpenERP in two ways. They can be linked to a menu, or they can be linked to a model.
+Reports can be handled by Odoo in two ways. They can be linked to a menu, or they can be linked to a model.
 
 * Model linked reports will appear in the right hand toolbar as per standard reports, or they can be specifically
   called with an action, such as a button. A record or number of records needs to be selected before the action
@@ -132,7 +137,7 @@ Reports can be handled by OpenERP in two ways. They can be linked to a menu, or 
   needs to be based on other parameters. Other reserved parameters, such as user id, may be meaningful in the
   context of prompting for parameters or ultimate data selection.
 
-Report actions can override existing OpenERP actions (such as invoice prints) or can be new actions.
+Report actions can override existing Odoo actions (such as invoice prints) or can be new actions.
 
 The service name is only important if it is overriding an existing service, or if the report is to be invoked from
 coded actions like buttons or wizards. For menu linked actions or generic object linked actions, the service name
@@ -145,7 +150,7 @@ The prpt (Pentaho report definition) file selected is stored in the database. Ch
 designer will require the report to be re-loaded.
 
 A prpt file and action can easily be defined as part of a module and distributed this way. Be aware, though, if
-the module is upgraded from within OpenERP it could potentially reload the distributed report and may lose
+the module is upgraded from within odoo it could potentially reload the distributed report and may lose
 changes that were uploaded manually after module installation.
 
 Security groups entered against the action will be respected in regard to action visibility - they play no role in
@@ -168,30 +173,26 @@ Disclaimer
 This has been developed over time to meet specific requirements as we have needed to meet them. If something is
 wrong, or you think would make a great feature, please do let us know at:
 
-    **support@willowit.com.au**
-
-
-Library
--------
-We will be endeavouring to create a library of sample and useful reports. Check at:
-
-    **http://www.willowit.com.au/**
-
-where we will announce when and where this is available. In the meantime, if you develop any reports or templates
-that you would consider worth sharing, please email them through with some description or details.
-
-    """,
-    "version": "0.1",
-    "author": "WillowIT Pty Ltd",
-    "website": "http://www.willowit.com.au/",
-    "depends": ["base", "mail"],
+    **richardd@willdooit.com**
+""",
     "category": "Reporting subsystems",
-    "data": [
-             "report_xml_view.xml",
+    "author": "Richard deMeester, WilldooIT",
+    'website': 'https://www.willdooit.com',
+    'images': [],
+    "depends": ["base",
+                "mail",
+                ],
+    "data": ["report_xml_view.xml",
              'wizard/report_prompt.xml',
              'data/config_data.xml',
              ],
-    "installable": True,
-    "application": True,
-    "active": False
+    'demo': [],
+    'qweb': [],
+    'installable': False, # Until further notice
+    'application': True,
+    'auto_install': False,
+
+    'test': [],
+    'css': [],
+    'js': [],
 }

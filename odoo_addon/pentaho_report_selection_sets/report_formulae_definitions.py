@@ -3,12 +3,12 @@
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from openerp.addons.pentaho_reports.java_oe import *
+from odoo.addons.pentaho_reports.java_odoo import *
 
-from openerp.tools.translate import _
+from odoo.tools.translate import _
 
 FTYPE_TIMEDELTA = 'tdel'
-FUNCTION_TYPES = OPENERP_DATA_TYPES + [(FTYPE_TIMEDELTA, 'Time Delta')]
+FUNCTION_TYPES = ODOO_DATA_TYPES + [(FTYPE_TIMEDELTA, 'Time Delta')]
 
 
 # FORMULAE are defined as dictionaries:

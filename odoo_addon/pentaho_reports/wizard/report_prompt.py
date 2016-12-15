@@ -9,12 +9,12 @@ from lxml import etree
 from datetime import date, datetime
 import pytz
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
-from ..java_oe import *
+from ..java_odoo import *
 from ..core import get_proxy_args, clean_proxy_args, VALID_OUTPUT_TYPES, DEFAULT_OUTPUT_TYPE
 
 
@@ -119,7 +119,7 @@ class report_prompt_class(models.TransientModel):
                 result['default'] = default_value
 
             # Default date or datetime is passed from Pentaho in local time without a timezone.
-            # If it is a datetime value, we need to convert to UTC for OpenERP to handle it correctly.
+            # If it is a datetime value, we need to convert to UTC for Odoo to handle it correctly.
             if result['type'] == TYPE_TIME:
                 if context and context.get('tz'):
                     result['default'] = pytz.timezone(context['tz']).localize(datetime.strptime(result['default'], DEFAULT_SERVER_DATETIME_FORMAT)).astimezone(pytz.timezone('UTC')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)

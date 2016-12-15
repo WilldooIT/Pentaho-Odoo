@@ -3,16 +3,16 @@
 <data noupdate="1">  <!-- 'noupdate' means existing data is *not* overwritten when module is updated -->
     <record id="pentaho_server_url" model="ir.config_parameter">
         <field name="key">pentaho.server.url</field>
-        <field name="value">http://localhost:8080/pentaho-reports-for-openerp</field>
+        <field name="value">http://localhost:8080/pentaho-reports-for-odoo</field>
     </record>
 
-    <record id="pentaho_openerp_xml_interface" model="ir.config_parameter">
-        <field name="key">pentaho.openerp.xml.interface</field>
+    <record id="pentaho_odoo_xml_interface" model="ir.config_parameter">
+        <field name="key">pentaho.odoo.xml.interface</field>
         <field name="value"> </field>
     </record>
 
-    <record id="pentaho_openerp_xml_port" model="ir.config_parameter">
-        <field name="key">pentaho.openerp.xml.port</field>
+    <record id="pentaho_odoo_xml_port" model="ir.config_parameter">
+        <field name="key">pentaho.odoo.xml.port</field>
         <field name="value"> </field>
     </record>
 
@@ -28,12 +28,12 @@
 
     <record id="pentaho_postgres_login" model="ir.config_parameter">
         <field name="key">pentaho.postgres.login</field>
-        <field name="value">openerp</field>
+        <field name="value">odoo</field>
     </record>
 
     <record id="pentaho_postgres_password" model="ir.config_parameter">
         <field name="key">pentaho.postgres.password</field>
-        <field name="value">openerp</field>
+        <field name="value">odoo</field>
     </record>
 </data>
 </odoo>

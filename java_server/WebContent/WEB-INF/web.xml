@@ -1,6 +1,6 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<display-name>Pentaho reports for OpenERP</display-name>
-	<description>Java XML-RPC service exposing the Pentaho reporting engine to OpenERP</description>
+	<display-name>Pentaho Reports for Odoo</display-name>
+	<description>Java XML-RPC service exposing the Pentaho reporting engine to Odoo</description>
 
 	<filter>
 		<filter-name>Pentaho boot-up checker</filter-name>

@@ -2,10 +2,10 @@
 
 # As code is written in the new_api structure, it should go in here and be removed from core.py
 
-from openerp import models, fields, api, _
-from openerp.exceptions import AccessDenied
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessDenied
 
-from openerp import sql_db, SUPERUSER_ID
+from odoo import sql_db, SUPERUSER_ID
 
 SKIP_DATE = 'SKIP_DATE_RECORDING'
 

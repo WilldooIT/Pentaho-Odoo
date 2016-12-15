@@ -5,16 +5,15 @@
         "base", 
         "pentaho_reports",
     ],
-    "author": "Doug Parker - Willow IT",
+    "author": "Doug Parker - Willdoo IT",
     "category": "Sample",
     "description": """
 Pentaho Custom Data Sample
 ==========================
 
-Uses the Custom Data Function with the OpenERP Data Access data source in a Pentaho Report.
+Uses the Custom Data Function with the Odoo Data Access data source in a Pentaho Report.
 
-The Custom Data Function calls a method on the OpenERP model to retrieve its data.
-The method can construct the report data in any way it chooses and is not restricted to returning rows from OpenERP models. 
+The Custom Data Function calls a method on the Odoo model to retrieve its data. The method can construct the report data in any way it chooses and is not restricted to returning rows from Odoo models. 
 
 Two reports are added by this module. They both produce a simple list of partner names but use custom data methods to do it. 
 
@@ -27,6 +26,6 @@ Two reports are added by this module. They both produce a simple list of partner
     ],
     "demo": [],
     "test": [],
-    "installable": True,
+    "installable": False, # Untested in version 10.  New API not implemented.
     "active": False,
 }

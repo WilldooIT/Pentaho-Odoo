@@ -2,11 +2,11 @@
 
 import json
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError, ValidationError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
-from openerp.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
-from openerp.addons.pentaho_reports.java_oe import OPENERP_DATA_TYPES, parameter_resolve_column_name
+from odoo.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
+from odoo.addons.pentaho_reports.java_odoo import ODOO_DATA_TYPES, parameter_resolve_column_name
 
 from ..report_formulae import *
 
@@ -145,7 +145,7 @@ class store_selections_dets_wizard(models.TransientModel):
     variable = fields.Char(string='Variable Name', size=64)
     label = fields.Char(string='Label', size=64)
     counter = fields.Integer(string='Parameter Number')
-    type = fields.Selection(OPENERP_DATA_TYPES, string='Data Type')
+    type = fields.Selection(ODOO_DATA_TYPES, string='Data Type')
     x2m = fields.Boolean(string='Data List Type')
     display_value = fields.Text(string='Value')
     calc_formula = fields.Char(string='Formula')

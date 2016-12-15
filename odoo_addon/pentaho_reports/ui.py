@@ -2,14 +2,14 @@
 
 import os
 import base64
-from openerp.tools.safe_eval import safe_eval
-from openerp import models, fields, api, _
-from openerp.exceptions import ValidationError
-from openerp.tools import config
+from odoo.tools.safe_eval import safe_eval
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+from odoo.tools import config
 
 import core
 
-from java_oe import JAVA_MAPPING, check_java_list, PARAM_VALUES
+from java_odoo import JAVA_MAPPING, check_java_list, PARAM_VALUES
 
 ADDONS_PATHS = config['addons_path'].split(",")
 

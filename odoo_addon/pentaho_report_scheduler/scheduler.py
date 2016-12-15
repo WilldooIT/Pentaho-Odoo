@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 import datetime
-from openerp import netsvc
+from odoo import netsvc
 import json
-import openerp
+import odoo
 
-from openerp.addons.pentaho_reports.java_oe import parameter_resolve_column_name
+from odoo.addons.pentaho_reports.java_odoo import parameter_resolve_column_name
 
 class ReportScheduler(models.Model):
     _name = "ir.actions.report.scheduler"
@@ -113,7 +113,7 @@ class ReportScheduler(models.Model):
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
                         content, type = self.pool['report'].get_pdf(self.env.cr, self.env.uid, [], report.report_name, context=self.env.context), 'pdf'
                     else:
-                        content, type = openerp.report.render_report(self.env.cr, self.env.uid, [], report.report_name, datas, self.env.context)
+                        content, type = odoo.report.render_report(self.env.cr, self.env.uid, [], report.report_name, datas, self.env.context)
                     report_output.append((report.name, content, type))
                 if report_output:
                     sched._send_reports(report_output)

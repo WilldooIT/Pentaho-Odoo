@@ -3,5 +3,5 @@
 import core
 import core_newapi
 import ui
-import java_oe
+import java_odoo
 import wizard

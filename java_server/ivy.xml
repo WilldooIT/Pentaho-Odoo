@@ -47,7 +47,7 @@
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
     -->
     
-    <!-- OpenERP Plugin Dependencies -->
+    <!-- Odoo Plugin Dependencies -->
     <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions-openerp" 
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
     
