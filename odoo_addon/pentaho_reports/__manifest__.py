@@ -3,7 +3,7 @@
 {
     "name": "Pentaho Reports for Odoo",
     "version": "2.0",
-    "summary": 'Pentaho Report Integration'
+    "summary": 'Pentaho Report Integration',
     "description": """
 Pentaho - Odoo Report Integration by Willdoo IT
 ===============================================
@@ -188,7 +188,7 @@ wrong, or you think would make a great feature, please do let us know at:
              ],
     'demo': [],
     'qweb': [],
-    'installable': False, # Until further notice
+    'installable': True,
     'application': True,
     'auto_install': False,
 

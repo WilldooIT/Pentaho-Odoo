@@ -29,10 +29,10 @@ def all_parameters(cls):
         # using the intermediate table is a bit of a cludge.
         # The new api seems to get in a knot when we used compute / inverse when there was no table...  __getattribute__ seemed to reset the other values...
         # Ideal would be to re-instate compute and inverse functions.
-        setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
-                                                                    "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
-                                                                    string="Multi Select",
-                                                                    ))
+#         setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
+#                                                                     "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
+#                                                                     string="Multi Select",
+#                                                                     ))
     return cls
 
 @all_parameters
