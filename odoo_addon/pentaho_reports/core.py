@@ -10,7 +10,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools import config
 import logging
-# import time
+import time
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -266,41 +266,41 @@ class PentahoReportOdooInterface(report_int):
         rendered_report, output_type = report_instance.execute()
         return rendered_report, output_type
 
-    def getObjects(self, cr, uid, ids, context):
-        env = api.Environment(cr, uid, context or {})
-        return env[self.table].browse(ids)
+#     def getObjects(self, cr, uid, ids, model, context):
+#         env = api.Environment(cr, uid, context or {})
+#         return env[model].browse(ids)
 
-#     def create_attachment(self, cr, uid, ids, attachment, rendered_report, output_type, model, context):
-#         """Generates attachment when report is called and links to object it is called from
-#         Returns: True """
-#         objs = self.getObjects(cr, uid, ids, model, context)
-#         pool = pooler.get_pool(cr.dbname)
-#         attachment_pool = pool.get('ir.attachment')
-#         for obj in objs:
-#             attachment_ids = attachment_pool.search(cr, uid, [('res_id', '=', obj.id), ('res_model', '=', model)], context=context)
-#             aname = eval(attachment, {'object': obj, 'version': str(len(attachment_ids)), 'time': time.strftime('%Y-%m-%d')})
-#             if aname:
-#                 try:
-#                     name = '%s%s' % (aname, '' if aname.endswith(output_type) else '.' + output_type)
-#                     # Remove the default_type entry from the context: this
-#                     # is for instance used on the account.account_invoices
-#                     # and is thus not intended for the ir.attachment type
-#                     # field.
-#                     ctx = dict(context)
-#                     ctx.pop('default_type', None)
-#                     attachment_pool.create(cr, uid, {
-#                         'name': name,
-#                         'datas': base64.encodestring(rendered_report),
-#                         'datas_fname': name,
-#                         'res_model': model,
-#                         'res_name': aname,
-#                         'res_id': obj.id,
-#                         }, context=ctx
-#                     )
-#                 except Exception:
-#                     #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
-#                     _logger.error('Could not create saved report attachment', exc_info=True)
-#         return True
+    def create_attachment(self, cr, uid, ids, attachment, rendered_report, output_type, model, context):
+        """Generates attachment when report is called and links to object it is called from
+        Returns: True """
+        env = api.Environment(cr, uid, context or {})
+        objs = env[model].browse(ids)
+        IRAttachment=env['ir.attachment']
+        for obj in objs:
+            attachments = IRAttachment.search([('res_id', '=', obj.id), ('res_model', '=', model)])
+            aname = eval(attachment, {'object': obj, 'version': str(len(attachments)), 'time': time.strftime('%Y-%m-%d')})
+            if aname:
+                try:
+                    name = '%s%s' % (aname, '' if aname.endswith(output_type) else '.' + output_type)
+                    # Remove the default_type entry from the context: this
+                    # is for instance used on the account.account_invoices
+                    # and is thus not intended for the ir.attachment type
+                    # field.
+                    ctx = dict(context)
+                    ctx.pop('default_type', None)
+                    IRAttachment.create({
+                                         'name': name,
+                                         'datas': base64.encodestring(rendered_report),
+                                         'datas_fname': name,
+                                         'res_model': model,
+                                         'res_name': aname,
+                                         'res_id': obj.id,
+                                         },
+                    )
+                except Exception:
+                    #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
+                    _logger.error('Could not create saved report attachment', exc_info=True)
+        return True
 
 def check_report_name(report_name):
     """Adds 'report.' prefix to report name if not present already
