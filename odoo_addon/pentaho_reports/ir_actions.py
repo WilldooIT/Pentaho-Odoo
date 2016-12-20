@@ -66,7 +66,6 @@ class ReportXML(models.Model):
                                                        'sequence': 10,
                                                        'parent_id': vals['linked_menu_id'],
                                                        'groups_id': vals.get('groups_id', []),
-                                                       'icon': 'STOCK_PRINT',
                                                        'action': 'ir.actions.act_window,%d' % (action.id,),
                                                        })
         return result
@@ -75,9 +74,9 @@ class ReportXML(models.Model):
     def delete_menu(self):
         for report in self:
             if report.created_menu_id:
-                if report.created_menu_id.action._model._name == 'ir.actions.act_window':
-                    report.created_menu_id.action.unlink()
-                report.created_menu_id.action.sudo().unlink()
+                if report.created_menu_id.action._name == 'ir.actions.act_window':
+                    report.created_menu_id.action.sudo().unlink()
+                report.created_menu_id.sudo().unlink()
 
     @api.multi
     def update_menu(self):
@@ -93,7 +92,7 @@ class ReportXML(models.Model):
                                                                'groups_id': groups_id,
                                                                })
                 else:
-                    if report.created_menu_id.action._model._name == 'ir.actions.act_window':
+                    if report.created_menu_id.action._name == 'ir.actions.act_window':
                         existing_context = safe_eval(report.created_menu_id.action.context)
                         new_context = existing_context if type(existing_context) == dict else {}
                         new_context['service_name'] = report.report_name or ''

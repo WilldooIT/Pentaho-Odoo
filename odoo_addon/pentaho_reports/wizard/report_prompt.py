@@ -26,13 +26,19 @@ def all_parameters(cls):
         setattr(cls, PARAM_XXX_NUMBER_VALUE % counter, fields.Float(string="Number Value"))
         setattr(cls, PARAM_XXX_DATE_VALUE % counter, fields.Date(string="Date Value"))
         setattr(cls, PARAM_XXX_TIME_VALUE % counter, fields.Datetime(string="Time Value"))
+#         setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
+#                                                                     string="Multi Select",
+#                                                                     compute="_multi_select_values",
+#                                                                     inverse="_multi_select_values_store",
+#                                                                     ))
         # using the intermediate table is a bit of a cludge.
         # The new api seems to get in a knot when we used compute / inverse when there was no table...  __getattribute__ seemed to reset the other values...
         # Ideal would be to re-instate compute and inverse functions.
-#         setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
-#                                                                     "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
-#                                                                     string="Multi Select",
-#                                                                     ))
+        setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
+                                                                    "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
+                                                                    string="Multi Select",
+                                                                    _module='pentaho_reports'
+                                                                    ))
     return cls
 
 @all_parameters
@@ -43,6 +49,24 @@ class report_prompt_class(models.TransientModel):
     output_type = fields.Selection(VALID_OUTPUT_TYPES, string='Report format', help='Choose the format for the output', required=True)
     parameters_dictionary = fields.Text(string='parameter dictionary')
     x2m_unique_id = fields.Integer(string='2M Unique Id')
+
+#     @api.one
+#     def _multi_select_values(self):
+#         for counter in range(0, MAX_PARAMS):
+#             lines = self.env['ir.actions.report.multivalues.promptwizard'].search([('x2m_unique_id', '=', self.x2m_unique_id), ('entry_num', '=', counter), ('selected', '=', True)])
+#             self.__setattr__(PARAM_XXX_2M_VALUE % counter, lines)
+# 
+#     @api.one
+#     def _multi_select_values_store(self):
+#         mpwiz = self.env['ir.actions.report.multivalues.promptwizard'].search([('x2m_unique_id', '=', self.x2m_unique_id)])
+#         mpwiz.write({'selected': False})
+#         import ipdb
+#         ipdb.set_trace()
+#         for counter in range(0, MAX_PARAMS):
+#             mpwiz = self.__getattribute__(PARAM_XXX_2M_VALUE % counter)
+#             if mpwiz:
+#                 mpwiz.write({'selected': True})
+
 
     def _parse_one_report_parameter_default_formula(self, formula, type, context=None):
         """
@@ -239,10 +263,9 @@ class report_prompt_class(models.TransientModel):
     def fvg_add_one_parameter(self, result, selection_groups, parameters, index, first_parameter):
 
         def add_field(result, field_name, selection_options=False, required=False):
-            result['fields'][field_name] = {'selectable': self._columns[field_name].selectable,
-                                            'type': self._columns[field_name]._type,
-                                            'size': self._columns[field_name].size,
-                                            'string': self._columns[field_name].string,
+            result['fields'][field_name] = {'index': self._fields[field_name].index,
+                                            'type': self._fields[field_name].type,
+                                            'string': self._fields[field_name].string,
                                             'views': {}
                                             }
             if required:
