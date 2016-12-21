@@ -197,10 +197,9 @@ class report_prompt_with_selection_set(models.TransientModel):
         super(report_prompt_with_selection_set, self).fvg_add_one_parameter(result, selection_groups, parameters, index, first_parameter)
 
         field_name = parameter_resolve_formula_column_name(parameters, index)
-        result['fields'][field_name] = {'selectable': self._columns[field_name].selectable,
-                                        'type': self._columns[field_name]._type,
-                                        'size': self._columns[field_name].size,
-                                        'string': self._columns[field_name].string,
+        result['fields'][field_name] = {'index': self._fields[field_name].index,
+                                        'type': self._fields[field_name].type,
+                                        'string': self._fields[field_name].string,
                                         'views': {}
                                         }
 

@@ -26,7 +26,7 @@ To be able to store and maintain selection sets, a user must have their security
              ],
     'demo': [],
     'qweb': [],
-    'installable': False, # Until further notice
+    'installable': True,
     'application': False,
     'auto_install': False,
 
