@@ -14,19 +14,19 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
-from ..java_odoo import *
+from .. import java_odoo
 from ..core import get_proxy_args, clean_proxy_args, VALID_OUTPUT_TYPES, DEFAULT_OUTPUT_TYPE
 
 
 def all_parameters(cls):
-    for counter in range(0, MAX_PARAMS):
-        setattr(cls, PARAM_XXX_STRING_VALUE % counter, fields.Char(string="String Value"))
-        setattr(cls, PARAM_XXX_BOOLEAN_VALUE % counter, fields.Boolean(string="Boolean Value"))
-        setattr(cls, PARAM_XXX_INTEGER_VALUE % counter, fields.Integer(string="Integer Value"))
-        setattr(cls, PARAM_XXX_NUMBER_VALUE % counter, fields.Float(string="Number Value"))
-        setattr(cls, PARAM_XXX_DATE_VALUE % counter, fields.Date(string="Date Value"))
-        setattr(cls, PARAM_XXX_TIME_VALUE % counter, fields.Datetime(string="Time Value"))
-#         setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
+    for counter in range(0, java_odoo.MAX_PARAMS):
+        setattr(cls, java_odoo.PARAM_XXX_STRING_VALUE % counter, fields.Char(string="String Value"))
+        setattr(cls, java_odoo.PARAM_XXX_BOOLEAN_VALUE % counter, fields.Boolean(string="Boolean Value"))
+        setattr(cls, java_odoo.PARAM_XXX_INTEGER_VALUE % counter, fields.Integer(string="Integer Value"))
+        setattr(cls, java_odoo.PARAM_XXX_NUMBER_VALUE % counter, fields.Float(string="Number Value"))
+        setattr(cls, java_odoo.PARAM_XXX_DATE_VALUE % counter, fields.Date(string="Date Value"))
+        setattr(cls, java_odoo.PARAM_XXX_TIME_VALUE % counter, fields.Datetime(string="Time Value"))
+#         setattr(cls, java_odoo.PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
 #                                                                     string="Multi Select",
 #                                                                     compute="_multi_select_values",
 #                                                                     inverse="_multi_select_values_store",
@@ -34,11 +34,11 @@ def all_parameters(cls):
         # using the intermediate table is a bit of a cludge.
         # The new api seems to get in a knot when we used compute / inverse when there was no table...  __getattribute__ seemed to reset the other values...
         # Ideal would be to re-instate compute and inverse functions.
-        setattr(cls, PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
-                                                                    "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
-                                                                    string="Multi Select",
-                                                                    _module='pentaho_reports'
-                                                                    ))
+        setattr(cls, java_odoo.PARAM_XXX_2M_VALUE % counter, fields.Many2many("ir.actions.report.multivalues.promptwizard",
+                                                                              "ir_actions_report_mv_pw%03i" % counter, 'aaa', 'bbb',
+                                                                              string="Multi Select",
+                                                                              _module='pentaho_reports'
+                                                                              ))
     return cls
 
 @all_parameters
@@ -52,9 +52,9 @@ class report_prompt_class(models.TransientModel):
 
 #     @api.one
 #     def _multi_select_values(self):
-#         for counter in range(0, MAX_PARAMS):
+#         for counter in range(0, java_odoo.MAX_PARAMS):
 #             lines = self.env['ir.actions.report.multivalues.promptwizard'].search([('x2m_unique_id', '=', self.x2m_unique_id), ('entry_num', '=', counter), ('selected', '=', True)])
-#             self.__setattr__(PARAM_XXX_2M_VALUE % counter, lines)
+#             self.__setattr__(java_odoo.PARAM_XXX_2M_VALUE % counter, lines)
 # 
 #     @api.one
 #     def _multi_select_values_store(self):
@@ -62,8 +62,8 @@ class report_prompt_class(models.TransientModel):
 #         mpwiz.write({'selected': False})
 #         import ipdb
 #         ipdb.set_trace()
-#         for counter in range(0, MAX_PARAMS):
-#             mpwiz = self.__getattribute__(PARAM_XXX_2M_VALUE % counter)
+#         for counter in range(0, java_odoo.MAX_PARAMS):
+#             mpwiz = self.__getattribute__(java_odoo.PARAM_XXX_2M_VALUE % counter)
 #             if mpwiz:
 #                 mpwiz.write({'selected': True})
 
@@ -87,10 +87,10 @@ class report_prompt_class(models.TransientModel):
             if context and context.get('tz'):
                 now = pytz.timezone('UTC').localize(now, is_dst=False).astimezone(pytz.timezone(context['tz']))
 
-            if type == TYPE_DATE:
+            if type == java_odoo.TYPE_DATE:
                 result = now.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-            if type == TYPE_TIME:
+            if type == java_odoo.TYPE_TIME:
                 result = now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         return result
@@ -113,9 +113,9 @@ class report_prompt_class(models.TransientModel):
             'hidden' : True for non-displayed parameters
         """
         value_type = parameter.get('value_type', '')
-        java_list, value_type = check_java_list(value_type)
+        java_list, value_type = java_odoo.check_java_list(value_type)
 
-        if not value_type in JAVA_MAPPING:
+        if not value_type in java_odoo.JAVA_MAPPING:
             raise ValidationError(_('Unhandled parameter type (%s).') % parameter.get('value_type', ''))
 
         if not parameter.get('name', False):
@@ -125,7 +125,7 @@ class report_prompt_class(models.TransientModel):
                   'label': parameter['attributes'].get('label', '')
                   }
 
-        result['type'] = JAVA_MAPPING[value_type](parameter['attributes'].get('data-format', False))
+        result['type'] = java_odoo.JAVA_MAPPING[value_type](parameter['attributes'].get('data-format', False))
         if java_list:
             result['multi_select'] = True
 
@@ -137,14 +137,14 @@ class report_prompt_class(models.TransientModel):
             if type(default_value) in (list, tuple):
                 default_value = default_value[0]
 
-            if PARAM_VALUES[result['type']].get('conv_default', False):
-                result['default'] = PARAM_VALUES[result['type']]['conv_default'](default_value)
+            if java_odoo.PARAM_VALUES[result['type']].get('conv_default', False):
+                result['default'] = java_odoo.PARAM_VALUES[result['type']]['conv_default'](default_value)
             else:
                 result['default'] = default_value
 
             # Default date or datetime is passed from Pentaho in local time without a timezone.
             # If it is a datetime value, we need to convert to UTC for Odoo to handle it correctly.
-            if result['type'] == TYPE_TIME:
+            if result['type'] == java_odoo.TYPE_TIME:
                 if context and context.get('tz'):
                     result['default'] = pytz.timezone(context['tz']).localize(datetime.strptime(result['default'], DEFAULT_SERVER_DATETIME_FORMAT)).astimezone(pytz.timezone('UTC')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -156,7 +156,7 @@ class report_prompt_class(models.TransientModel):
         if parameter.get('is_mandatory', False):
             result['mandatory'] = parameter['is_mandatory']
 
-        if result['type'] in (TYPE_DATE, TYPE_TIME):
+        if result['type'] in (java_odoo.TYPE_DATE, java_odoo.TYPE_TIME):
             result['mandatory'] = True
 
         if parameter['attributes'].get('parameter-render-type', False) in ('dropdown', 'list', 'radio', 'checkbox', 'togglebutton'):
@@ -170,13 +170,13 @@ class report_prompt_class(models.TransientModel):
     def _parse_report_parameters(self, report_parameters, context=None):
         result = []
         for parameter in report_parameters:
-            if not parameter.get('name') in RESERVED_PARAMS.keys():
+            if not parameter.get('name') in java_odoo.RESERVED_PARAMS.keys():
                 if not parameter.get('attributes',{}):
                     raise ValidationError(_('Parameter received with no attributes.'))
 
                 result.append(self._parse_one_report_parameter(parameter, context=context))
 
-        if len(result) > MAX_PARAMS:
+        if len(result) > java_odoo.MAX_PARAMS:
             raise ValidationError(_('Too many report parameters (%d).') % len(result))
 
         return result
@@ -203,12 +203,12 @@ class report_prompt_class(models.TransientModel):
         result = {'output_type': report_action.pentaho_report_output_type or DEFAULT_OUTPUT_TYPE}
         for index in range(0, len(parameters)):
             if parameters[index].get('default'):
-                if parameter_can_2m(parameters, index):
+                if java_odoo.parameter_can_2m(parameters, index):
                     raise ValidationError(_('Multi select default values not supported.'))
                 else:
-                    result[parameter_resolve_column_name(parameters, index)] = parameters[index]['default'] # TODO: Needs to be validated for list values - especially for M2M!
+                    result[java_odoo.parameter_resolve_column_name(parameters, index)] = parameters[index]['default'] # TODO: Needs to be validated for list values - especially for M2M!
         for index in range(0, len(parameters)):
-            if parameter_can_2m(parameters, index):
+            if java_odoo.parameter_can_2m(parameters, index):
                 self.env['ir.actions.report.multivalues.promptwizard'].search([('x2m_unique_id', '=', x2m_unique_id), ('entry_num', '=', index)]).write({'selected': False})
         return result
 
@@ -216,7 +216,7 @@ class report_prompt_class(models.TransientModel):
         x2m_unique_id = False
         mpwiz_obj = self.env['ir.actions.report.multivalues.promptwizard']
         for index in range(0, len(parameters)):
-            if parameter_can_2m(parameters, index):
+            if java_odoo.parameter_can_2m(parameters, index):
                 if not x2m_unique_id:
                     mpwiz = mpwiz_obj.search([('x2m_unique_id', '>', 0)], order='x2m_unique_id desc', limit=1)
                     x2m_unique_id = mpwiz.x2m_unique_id + 1
@@ -226,9 +226,9 @@ class report_prompt_class(models.TransientModel):
                     mpwiz_obj.create({'x2m_unique_id': x2m_unique_id,
                                       'entry_num': index,
                                       'selected': False,
-                                      'sel_int': item[0] if parameters[index]['type'] == TYPE_INTEGER else False,
-                                      'sel_str': item[0] if parameters[index]['type'] == TYPE_STRING else False,
-                                      'sel_num': item[0] if parameters[index]['type'] == TYPE_NUMBER else False,
+                                      'sel_int': item[0] if parameters[index]['type'] == java_odoo.TYPE_INTEGER else False,
+                                      'sel_str': item[0] if parameters[index]['type'] == java_odoo.TYPE_STRING else False,
+                                      'sel_num': item[0] if parameters[index]['type'] == java_odoo.TYPE_NUMBER else False,
                                       'name': item[1],
                                       })
         return x2m_unique_id
@@ -290,8 +290,8 @@ class report_prompt_class(models.TransientModel):
                 if v is not None:
                     sf.set(k, v)
 
-        field_name = parameter_resolve_column_name(parameters, index)
-        is_2m = parameter_can_2m(parameters, index)
+        field_name = java_odoo.parameter_resolve_column_name(parameters, index)
+        is_2m = java_odoo.parameter_can_2m(parameters, index)
         if is_2m:
             add_2m_field(result,
                          field_name,
@@ -357,7 +357,7 @@ class report_prompt_class(models.TransientModel):
         return result
 
     def decode_wizard_value(self, parameters, index, value):
-        if parameter_can_2m(parameters, index):
+        if java_odoo.parameter_can_2m(parameters, index):
             #
             # if value comes from the wizard column, it will be a list of browse records
             # if value comes from a dictionary with a default column value, it will be in the format:
@@ -365,29 +365,29 @@ class report_prompt_class(models.TransientModel):
             #
             if value and type(value[0]) in (list, tuple):
                 value = self.env['ir.actions.report.multivalues.promptwizard'].browse(value[0][2])
-            result = value and [(x.sel_int if parameters[index]['type'] == TYPE_INTEGER else \
-                                 x.sel_str if parameters[index]['type'] == TYPE_STRING else \
-                                 x.sel_num if parameters[index]['type'] == TYPE_NUMBER else \
+            result = value and [(x.sel_int if parameters[index]['type'] == java_odoo.TYPE_INTEGER else \
+                                 x.sel_str if parameters[index]['type'] == java_odoo.TYPE_STRING else \
+                                 x.sel_num if parameters[index]['type'] == java_odoo.TYPE_NUMBER else \
                                  False
                                  ) for x in value
                                 ] \
                      or []
         else:
-            result = value or PARAM_VALUES[parameters[index]['type']]['if_false']
+            result = value or java_odoo.PARAM_VALUES[parameters[index]['type']]['if_false']
         return result
 
     def encode_wizard_value(self, parameters, index, x2m_unique_id, value):
         mpwiz_obj = self.env['ir.actions.report.multivalues.promptwizard']
 
         result = value
-        if parameter_can_2m(parameters, index):
+        if java_odoo.parameter_can_2m(parameters, index):
             if not type(result) in (list, tuple):
                 result = []
             sel_ids = []
             for v in result:
-                v_domain = ('sel_int', '=', v) if parameters[index]['type'] == TYPE_INTEGER else \
-                           ('sel_str', '=', v) if parameters[index]['type'] == TYPE_STRING else \
-                           ('sel_num', '=', v) if parameters[index]['type'] == TYPE_NUMBER else \
+                v_domain = ('sel_int', '=', v) if parameters[index]['type'] == java_odoo.TYPE_INTEGER else \
+                           ('sel_str', '=', v) if parameters[index]['type'] == java_odoo.TYPE_STRING else \
+                           ('sel_num', '=', v) if parameters[index]['type'] == java_odoo.TYPE_NUMBER else \
                            False
                 if v_domain:
                     mpwiz = mpwiz_obj.search([('x2m_unique_id', '=', x2m_unique_id), ('entry_num', '=', index), v_domain])
@@ -401,7 +401,7 @@ class report_prompt_class(models.TransientModel):
         parameters = json.loads(self.parameters_dictionary)
         result = {}
         for index in range(0, len(parameters)):
-            result[parameters[index]['variable']] = self.decode_wizard_value(parameters, index, getattr(self, parameter_resolve_column_name(parameters, index)))
+            result[parameters[index]['variable']] = self.decode_wizard_value(parameters, index, getattr(self, java_odoo.parameter_resolve_column_name(parameters, index)))
         return result
 
     @api.multi

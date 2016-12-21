@@ -24,7 +24,7 @@ The desired selection set to be used needs to be chosen in the report schedule g
             ],
     'demo': [],
     'qweb': [],
-    'installable': False, # Until further notice
+    'installable': True,
     'application': False,
     'auto_install': True,
 

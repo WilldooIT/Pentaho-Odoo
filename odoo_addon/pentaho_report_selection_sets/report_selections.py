@@ -12,10 +12,10 @@ from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import frozendict
 
-from odoo.addons.pentaho_reports.java_odoo import *
+from odoo.addons.pentaho_reports import java_odoo
 from odoo.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
 
-from report_formulae import *
+import report_formulae
 
 
 class selection_set_header(models.Model):
@@ -42,7 +42,7 @@ class selection_set_header(models.Model):
         known_variables = {}
         for index in range(0, len(parameters)):
             known_variables[parameters[index]['variable']] = {'type': parameters[index]['type'],
-                                                              'x2m': parameter_can_2m(parameters, index),
+                                                              'x2m': java_odoo.parameter_can_2m(parameters, index),
                                                               'calculated': False,
                                                               }
 
@@ -54,7 +54,7 @@ class selection_set_header(models.Model):
                     for detail in self.detail_ids:
                         if detail.variable == parameters[index]['variable']:
                             expected_type = parameters[index]['type']
-                            expected_2m = parameter_can_2m(parameters, index)
+                            expected_2m = java_odoo.parameter_can_2m(parameters, index)
                             # check expected_type as TYPE_DATE / TYPE_TIME, etc... and validate display_value is compatible with it
 
                             calculate_formula_this_time = False
@@ -81,11 +81,11 @@ class selection_set_header(models.Model):
                                     display_value = json.dumps(formula_obj.evaluate_formula(formula, expected_type, expected_2m, known_variables))
                                 else:
                                     display_value = detail.display_value
-                                result[parameter_resolve_column_name(parameters, index)] = detail.display_value_to_wizard(display_value, parameters, index, x2m_unique_id)
-                                result[parameter_resolve_formula_column_name(parameters, index)] = detail.calc_formula
+                                result[java_odoo.parameter_resolve_column_name(parameters, index)] = detail.display_value_to_wizard(display_value, parameters, index, x2m_unique_id)
+                                result[report_formulae.parameter_resolve_formula_column_name(parameters, index)] = detail.calc_formula
 
                                 known_variables[parameters[index]['variable']].update({'calculated': True,
-                                                                                       'calced_value': detail.wizard_value_to_display(result[parameter_resolve_column_name(parameters, index)],
+                                                                                       'calced_value': detail.wizard_value_to_display(result[java_odoo.parameter_resolve_column_name(parameters, index)],
                                                                                                                                       parameters, index),
                                                                                        })
                                 any_calculated_this_time = True
@@ -112,7 +112,7 @@ class selection_set_detail(models.Model):
     variable = fields.Char(string='Variable Name', size=64, readonly=True)
     label = fields.Char(string='Label', size=64, readonly=True)
     counter = fields.Integer(string='Parameter Number', readonly=True)
-    type = fields.Selection(ODOO_DATA_TYPES, string='Data Type', readonly=True)
+    type = fields.Selection(java_odoo.ODOO_DATA_TYPES, string='Data Type', readonly=True)
     x2m = fields.Boolean(string='Data List Type')
     display_value = fields.Text(string='Value')
     calc_formula = fields.Char(string='Formula')
@@ -132,8 +132,8 @@ class selection_set_detail(models.Model):
         return result
 
 def formula_parameters(cls):
-    for counter in range(0, MAX_PARAMS):
-        setattr(cls, PARAM_XXX_FORMULA % counter, fields.Char(string="Formula"))
+    for counter in range(0, java_odoo.MAX_PARAMS):
+        setattr(cls, report_formulae.PARAM_XXX_FORMULA % counter, fields.Char(string="Formula"))
     return cls
 
 @formula_parameters
@@ -152,7 +152,7 @@ class report_prompt_with_selection_set(models.TransientModel):
 
         parameters = json.loads(result.get('parameters_dictionary', []))
         for index in range(0, len(parameters)):
-            result[parameter_resolve_formula_column_name(parameters, index)] = ''
+            result[report_formulae.parameter_resolve_formula_column_name(parameters, index)] = ''
 
         if self.env.context.get('populate_selectionset_id'):
             selectionset = set_header_obj.browse(self.env.context['populate_selectionset_id'])
@@ -196,7 +196,7 @@ class report_prompt_with_selection_set(models.TransientModel):
 
         super(report_prompt_with_selection_set, self).fvg_add_one_parameter(result, selection_groups, parameters, index, first_parameter)
 
-        field_name = parameter_resolve_formula_column_name(parameters, index)
+        field_name = report_formulae.parameter_resolve_formula_column_name(parameters, index)
         result['fields'][field_name] = {'index': self._fields[field_name].index,
                                         'type': self._fields[field_name].type,
                                         'string': self._fields[field_name].string,

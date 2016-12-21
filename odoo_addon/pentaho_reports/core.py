@@ -245,8 +245,8 @@ class Report(object):
 
 
 class PentahoReportOdooInterface(report_int):
-    def __init__(self, name):
-        super(PentahoReportOdooInterface, self).__init__(name)
+    def __init__(self, name, register=True):
+        super(PentahoReportOdooInterface, self).__init__(name, register=register)
 
     def create(self, cr, uid, ids, data, context):
         name = self.name
@@ -331,6 +331,6 @@ class ReportXML(models.Model):
         self.env.cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'pentaho'))
         r = self.env.cr.dictfetchone()
         if r:
-            return PentahoReportOdooInterface(SERVICE_NAME_PREFIX+r['report_name'])
+            return PentahoReportOdooInterface(SERVICE_NAME_PREFIX+r['report_name'], register=False)
         return super(ReportXML, self)._lookup_report(name)
 

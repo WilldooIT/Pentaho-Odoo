@@ -22,7 +22,7 @@ module has been installed.
             ],
     'demo': [],
     'qweb': [],
-    'installable': False, # Until further notice
+    'installable': True,
     'application': False,
     'auto_install': True,
 

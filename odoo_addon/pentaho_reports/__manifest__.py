@@ -8,9 +8,23 @@
 Pentaho - Odoo Report Integration by Willdoo IT
 ===============================================
 
+Outstanding
+-----------
+
+* ** THIS MODULE IS YET TO BE WORKING WITH OBJECT REPORTS IN VERSION 10. **  This is probably needing work on the
+java component of the actual designer and engine.
+* Attachments is untested and in an unknown state.
+* Report Scheduling / Emailing / Messaging is untested and in an unknown state.
+* Advanced parameter functions is untested, but probably working.
+
+
+
+Overview
+--------
+
 This module integrates Pentaho's reporting engine with Odoo.
 
-This project was developed by Willdoo IT (formerly Willow IT), using the libraries and extensions developed by 
+This project was developed by Willdoo IT (formerly Willow IT), using the libraries and extensions developed by
 De Bortoli Wines, Australia (Pieter van der Merwe in particular) for the Pentaho reporting system. The Odoo
 addon also derives from and/or is inspired by the Jasper Reports addon developed by NaN-tic.
 
@@ -94,7 +108,7 @@ Formula, Visible Items, Validate Values, et al.
 
 Setup
 -----
-Some parameters may be required in Settings/Customization/System Parameters.
+Some parameters may be required in **Settings / Parameters / System Parameters**.
 
 The address of the Pentaho server which is used to render the report is defined with the parameter:
 
@@ -118,7 +132,7 @@ For SQL query based data sources, the Pentaho server will use the following para
 
 Report Actions
 --------------
-Reports are defined to Odoo under **Settings/Technical/Low Level Objects/Actions/Reports**.  This is the place
+Reports are defined to Odoo under **Settings / Technical / Actions / Reports**.  This is the place
 where standard Odoo report actions are defined. Selecting the appropriate checkbox can convert existing report
 actions to Pentaho Report Actions.
 
