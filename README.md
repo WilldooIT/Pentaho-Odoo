@@ -1,8 +1,17 @@
+## Notes About Version 10
+
+* ** THIS MODULE IS YET TO BE WORKING WITH OBJECT REPORTS IN VERSION 10. **  This is probably needing work on the
+java component of the actual designer and engine.  For the moment, it appears to be all fine for SQL reports.
+* Attachments is untested and in an unknown state.
+* Report Scheduling / Emailing / Messaging is untested and in an unknown state.
+* Advanced parameter functions is untested, but probably working.
+
+
 ## A Summary of Recent Changes
 
 A more detailed description of changes can be found on the [Pentaho Report for Odoo wiki](https://github.com/WilldooIT/Pentaho-Odoo/wiki/Significant-Changes "Pentaho Reports for Odoo Wiki")
 
-* December 2016 - Repository rename to Pentaho-Odoo in preparation for version 10.0 development.  Company references changed to WilldooIT.  Note: Not tested at all yet with version 10!
+* December 2016 - Repository rename to Pentaho-Odoo in preparation for version 10.0 development.  Company references changed to WilldooIT.
 * February 2016 - Upgrade to support Odoo version 9.0.
 * September 2015 - Overcome previous limitation - Now works with the auth_crypt module turned on.
 * August 2015 - Remove need for special duplicated "Pentaho user" - a limitation has been introduced for object based reports with password encryption turned on - work-around in pipeline.
