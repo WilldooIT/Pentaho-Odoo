@@ -35,12 +35,12 @@ class ResUsersPentahoCrypt(models.Model):
         new_cr.close()
         return pword
 
-    def check_credentials(self, cr, uid, password):
-        password = self.strip_password(cr, uid, password)
-        cr.execute ('SELECT id FROM pentaho_auth_crypt WHERE user_id=%s AND value=%s', (uid, password))
-        if cr.rowcount:
+    def check_credentials(self, password):
+        password = self.strip_password(password)
+        self.env.cr.execute ('SELECT id FROM pentaho_auth_crypt WHERE user_id=%s AND value=%s', (self.env.uid, password))
+        if self.env.cr.rowcount:
             return
-        return super(ResUsersPentahoCrypt, self).check_credentials(cr, uid, password)
+        return super(ResUsersPentahoCrypt, self).check_credentials(password)
 
     def remove_temporary_password_pentaho(self, value):
         new_cr = odoo.registry(self.env.cr.dbname).cursor()

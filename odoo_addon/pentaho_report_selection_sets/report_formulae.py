@@ -9,9 +9,9 @@ from odoo import models, fields, _, api
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
-from odoo.addons.pentaho_reports.java_odoo import *
+from odoo.addons.pentaho_reports import java_odoo
 
-from report_formulae_definitions import *
+import report_formulae_definitions
 
 PARAM_XXX_FORMULA = 'param_%03i_formula'
 
@@ -32,7 +32,7 @@ def parameter_resolve_formula_column_name(parameters, index):
     return PARAM_XXX_FORMULA % index
 
 def find_type_display_name(type):
-    for ft in FUNCTION_TYPES:
+    for ft in report_formulae_definitions.FUNCTION_TYPES:
         if ft[0] == type:
             return ft[1]
     return 'Unknown'
@@ -75,16 +75,16 @@ def establish_type(s, known_variables):
             The True variable name
     """
     if len(s) >= 2 and s[:1] in QUOTES and s[-1:] == s[:1]:
-        return VALUE_CONSTANT, TYPE_STRING, False, None
+        return VALUE_CONSTANT, java_odoo.TYPE_STRING, False, None
     if len(s) > 0 and s[:1] in (DIGITS + '-'):
         try:
             i = int(s)
-            return VALUE_CONSTANT, TYPE_INTEGER, False, None
+            return VALUE_CONSTANT, java_odoo.TYPE_INTEGER, False, None
         except ValueError:
             pass
         try:
             f = float(s)
-            return VALUE_CONSTANT, TYPE_NUMBER, False, None
+            return VALUE_CONSTANT, java_odoo.TYPE_NUMBER, False, None
         except ValueError:
             pass
     true_name, variable = variable_ignore_case(known_variables, s)
@@ -106,9 +106,9 @@ def retrieve_value(s, known_variables):
             pass
     true_name, variable = variable_ignore_case(known_variables, s)
     result = json.loads(variable.get('calced_value', 'null'))
-    if variable.get('type', None) == TYPE_DATE:
+    if variable.get('type', None) == java_odoo.TYPE_DATE:
         result = datetime.strptime(result, DEFAULT_SERVER_DATE_FORMAT).date()
-    if variable.get('type', None) == TYPE_TIME:
+    if variable.get('type', None) == java_odoo.TYPE_TIME:
         result = datetime.strptime(result, DEFAULT_SERVER_DATETIME_FORMAT)
     return result
 
@@ -196,8 +196,8 @@ class selection_set_formula(models.Model):
                 else:
                     function_name = function_name.lower()
                     operand_dictionary['function_name'] = function_name
-                    operand_dictionary['returns'] = FORMULAE.get(function_name,{}).get('type', None)
-                    operand_dictionary['returns_2m'] = FORMULAE.get(function_name,{}).get('type_2m', None)
+                    operand_dictionary['returns'] = report_formulae_definitions.FORMULAE.get(function_name,{}).get('type', None)
+                    operand_dictionary['returns_2m'] = report_formulae_definitions.FORMULAE.get(function_name,{}).get('type_2m', None)
                     operand_dictionary['function_args'] = []
                     operand = discard_firstchar(operand)
                     while operand and operand[0:1] != ')':
@@ -224,8 +224,8 @@ class selection_set_formula(models.Model):
                         operand_dictionary['error'] = _('Formula not closed: "%s"') % (function_name,)
 
                     if not operand_dictionary.get('error'):
-                        if function_name.lower() in FORMULAE:
-                            operand_dictionary['error'] = self.check_formula_arguments(FORMULAE[function_name]['arguments'], operand_dictionary['function_args'], known_variables, function_name)
+                        if function_name.lower() in report_formulae_definitions.FORMULAE:
+                            operand_dictionary['error'] = self.check_formula_arguments(report_formulae_definitions.FORMULAE[function_name]['arguments'], operand_dictionary['function_args'], known_variables, function_name)
                         else:
                             operand_dictionary['error'] = _('Formula undefined or restricted: "%s"') % (function_name,)
 
@@ -252,7 +252,7 @@ class selection_set_formula(models.Model):
         if operand_dictionary.get('value'):
             return operand_dictionary['operator'], operand_dictionary['returns'], operand_dictionary['returns_2m'], retrieve_value(operand_dictionary['value'], known_variables)
 
-        formula_definition = FORMULAE[operand_dictionary['function_name']]
+        formula_definition = report_formulae_definitions.FORMULAE[operand_dictionary['function_name']]
         replacements = dict.fromkeys([arg['insert_at'] for arg in formula_definition['arguments']], '')
         variables = {}
 
@@ -288,13 +288,13 @@ class selection_set_formula(models.Model):
         # every operator must be a '+'
         # every standard operand type can be accepted as they will be converted to strings, and appended...
         for operand_dictionary in operands:
-            self.operand_type_check(operand_dictionary, '+', (TYPE_STRING, TYPE_BOOLEAN, TYPE_INTEGER, TYPE_NUMBER, TYPE_DATE, TYPE_TIME), (False, True), expected_type)
+            self.operand_type_check(operand_dictionary, '+', (java_odoo.TYPE_STRING, java_odoo.TYPE_BOOLEAN, java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER, java_odoo.TYPE_DATE, java_odoo.TYPE_TIME), (False, True), expected_type)
 
     def eval_string_formula(self, expected_type, operands, known_variables):
         def to_string(value, op_type, op_2m):
             if op_2m:
                 return json.dumps(value)
-            return op_type in (TYPE_STRING) and value or str(value)
+            return op_type in (java_odoo.TYPE_STRING) and value or str(value)
 
         result_string = ''
         for operand_dictionary in operands:
@@ -306,48 +306,48 @@ class selection_set_formula(models.Model):
         # only 1 operand allowed
         # must be a '+'
         # every standard operand type can be accepted as they will be converted to booleans using standard Python boolean rules
-        self.operand_type_check(operands[0], '+', (TYPE_STRING, TYPE_BOOLEAN, TYPE_INTEGER, TYPE_NUMBER, TYPE_DATE, TYPE_TIME), (False,), expected_type)
+        self.operand_type_check(operands[0], '+', (java_odoo.TYPE_STRING, java_odoo.TYPE_BOOLEAN, java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER, java_odoo.TYPE_DATE, java_odoo.TYPE_TIME), (False,), expected_type)
         for operand_dictionary in operands[1:]:
             operand_dictionary['error'] = _('Excess operands not permitted for for this type of parameter: %s') % (operand_dictionary.get('value') or operand_dictionary.get('function_name'),)
 
     def eval_boolean_formula(self, expected_type, operands, known_variables):
         def to_boolean(value, op_type, op_2m):
-            return op_type in (TYPE_BOOLEAN) and value or bool(value)
+            return op_type in (java_odoo.TYPE_BOOLEAN) and value or bool(value)
 
         op_op, op_type, op_2m, op_result = self.eval_operand(operands[0], known_variables)
-        result_bool += to_boolean(op_result, op_type, op_2m)
+        result_bool = to_boolean(op_result, op_type, op_2m)
         return result_bool
 
     def check_numeric_formula(self, expected_type, operands):
         # every operator type is fine
         # only integers and numerics can be accepted
         for operand_dictionary in operands:
-            self.operand_type_check(operand_dictionary, '+-*/', (TYPE_INTEGER, TYPE_NUMBER), (False,), expected_type)
+            self.operand_type_check(operand_dictionary, '+-*/', (java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER), (False,), expected_type)
 
     def eval_numeric_formula(self, expected_type, operands, known_variables):
         # all operands have been validated as integers or numbers already, so this is redundant.
         def to_number(value, op_type, op_2m):
-            return op_type in (TYPE_INTEGER, TYPE_NUMBER) and value or float(value)
+            return op_type in (java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER) and value or float(value)
 
         result_num = 0.0
         for operand_dictionary in operands:
             op_op, op_type, op_2m, op_result = self.eval_operand(operand_dictionary, known_variables)
             result_num = eval('result_num %s to_number(op_result, op_type, op_2m)' % (op_op,))
-        return expected_type == TYPE_INTEGER and int(result_num) or result_num
+        return expected_type == java_odoo.TYPE_INTEGER and int(result_num) or result_num
 
     def check_date_formula(self, expected_type, operands):
         # first operand must be a date or datetime and a '+' operator
-        self.operand_type_check(operands[0], '+', (TYPE_DATE, TYPE_TIME), (False,), expected_type)
+        self.operand_type_check(operands[0], '+', (java_odoo.TYPE_DATE, java_odoo.TYPE_TIME), (False,), expected_type)
         # others must be all time_deltas
         for operand_dictionary in operands[1:]:
-            self.operand_type_check(operand_dictionary, '+-', (FTYPE_TIMEDELTA,), (False,), expected_type)
+            self.operand_type_check(operand_dictionary, '+-', (report_formulae_definitions.FTYPE_TIMEDELTA,), (False,), expected_type)
 
     def eval_date_formula(self, expected_type, operands, known_variables):
         # all operands have been validated as correct type, so these are redundant - if it errors, then we have a coding problem in the formula checks...
         def to_date(value, op_type, op_2m):
-            return op_type in (TYPE_DATE, TYPE_TIME) and value or datetime.now()
+            return op_type in (java_odoo.TYPE_DATE, java_odoo.TYPE_TIME) and value or datetime.now()
         def to_timedelta(value, op_type, op_2m):
-            return op_type in (FTYPE_TIMEDELTA) and value or timedelta()
+            return op_type in (report_formulae_definitions.FTYPE_TIMEDELTA) and value or timedelta()
 
         op_op, op_type, op_2m, op_result = self.eval_operand(operands[0], known_variables)
         result_dtm = op_result
@@ -356,12 +356,12 @@ class selection_set_formula(models.Model):
             op_op, op_type, op_2m, op_result = self.eval_operand(operand_dictionary, known_variables)
             result_dtm = eval('result_dtm %s to_timedelta(op_result, op_type, op_2m)' % (op_op,))
         # Odoo will assume datetimes are UTC, but here they are local!
-        if result_dtm_type == TYPE_TIME:
+        if result_dtm_type == java_odoo.TYPE_TIME:
             result_dtm = result_dtm.astimezone(pytz.timezone('UTC'))
-        elif expected_type == TYPE_TIME:
+        elif expected_type == java_odoo.TYPE_TIME:
             if self.env.context.get('tz'):
                 result_dtm = pytz.timezone(self.env.context['tz']).localize(datetime.combine(result_dtm,datetime.min.time()), is_dst=False).astimezone(pytz.timezone('UTC'))
-        return expected_type == TYPE_DATE and result_dtm.strftime(DEFAULT_SERVER_DATE_FORMAT) or result_dtm.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return expected_type == java_odoo.TYPE_DATE and result_dtm.strftime(DEFAULT_SERVER_DATE_FORMAT) or result_dtm.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def validate_formula(self, formula_str, expected_type, expected_2m, known_variables):
         """
@@ -409,13 +409,13 @@ class selection_set_formula(models.Model):
             operands = self.split_formula(formula_str, known_variables)
             result['operands'] = operands
 
-            if expected_type == TYPE_STRING:
+            if expected_type == java_odoo.TYPE_STRING:
                 self.check_string_formula(expected_type, operands)
-            if expected_type == TYPE_BOOLEAN:
+            if expected_type == java_odoo.TYPE_BOOLEAN:
                 self.check_boolean_formula(expected_type, operands)
-            if expected_type in (TYPE_INTEGER, TYPE_NUMBER):
+            if expected_type in (java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER):
                 self.check_numeric_formula(expected_type, operands)
-            if expected_type in (TYPE_DATE, TYPE_TIME):
+            if expected_type in (java_odoo.TYPE_DATE, java_odoo.TYPE_TIME):
                 self.check_date_formula(expected_type, operands)
 
             for operand in operands:
@@ -450,13 +450,13 @@ class selection_set_formula(models.Model):
                 result.append(self.evaluate_formula(single_value_dict, expected_type, False, known_variables))
             return result
 
-        if expected_type == TYPE_STRING:
+        if expected_type == java_odoo.TYPE_STRING:
             result = self.eval_string_formula(expected_type, formula_dict['operands'], known_variables)
-        if expected_type == TYPE_BOOLEAN:
+        if expected_type == java_odoo.TYPE_BOOLEAN:
             result = self.eval_boolean_formula(expected_type, formula_dict['operands'], known_variables)
-        if expected_type in (TYPE_INTEGER, TYPE_NUMBER):
+        if expected_type in (java_odoo.TYPE_INTEGER, java_odoo.TYPE_NUMBER):
             result = self.eval_numeric_formula(expected_type, formula_dict['operands'], known_variables)
-        if expected_type in (TYPE_DATE, TYPE_TIME):
+        if expected_type in (java_odoo.TYPE_DATE, java_odoo.TYPE_TIME):
             result = self.eval_date_formula(expected_type, formula_dict['operands'], known_variables)
         return result
 

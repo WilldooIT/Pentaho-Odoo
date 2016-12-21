@@ -100,8 +100,9 @@ This module is installed like any other Odoo module. Briefly:
 * Place the 'odoo_addon' folder on the filesystem, somewhere that is accessible to the Odoo server.
 * Update 'odoo-server.conf' file, and include the full path to this folder on the 'addons_path' line.
 * Restart Odoo and log in as a user with administrator rights.
-* Go to Settings -> Update Modules List and click Update.
-* Go to Settings -> Installed Modules, remove the 'Installed Modules' filter and search for 'pentaho'.
+* Go to Settings and click 'Activate the developer mode'.
+* Go to Apps -> Update Apps List.
+* Go to Apps and search for 'pentaho'.
 * Install the 'Pentaho Reports for Odoo' module.
 
 After installation, the module still needs to be configured. Refer to the [module description](https://github.com/WilldooIT/Pentaho-Odoo/blob/version10/odoo_addon/pentaho_reports/__manifest__.py "__manifest__.py in Pentaho Odoo Module") for detailed instructions on how to do this. 

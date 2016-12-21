@@ -16,7 +16,7 @@ and allows Pentaho reports to be scheduled with pre-entered selections.
 Chosen reports can be either emailed to users or sent to their Odoo message box as a notification, or both.
 
 A new option is added to the menus:
-    * **Settings / Technical / Actions / Scheduler / Report Scheduler**
+    * **Settings / Technical / Automation / Report Scheduler**
 
 From here, a report schedule group can be defined.  The description will be included in the message or email body.
 
@@ -40,7 +40,7 @@ Note the **comma** after the argument **IS** required.
             ],
     'demo': [],
     'qweb': [],
-    'installable': False, # Until further notice
+    'installable': True,
     'application': False,
     'auto_install': False,
 

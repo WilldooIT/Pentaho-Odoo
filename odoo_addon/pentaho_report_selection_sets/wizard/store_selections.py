@@ -6,9 +6,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.pentaho_reports.core import VALID_OUTPUT_TYPES
-from odoo.addons.pentaho_reports.java_odoo import ODOO_DATA_TYPES, parameter_resolve_column_name
+from odoo.addons.pentaho_reports.java_odoo import ODOO_DATA_TYPES, parameter_resolve_column_name, parameter_can_2m
 
-from ..report_formulae import *
+from ..report_formulae import parameter_resolve_formula_column_name
 
 
 class store_selections_wizard(models.TransientModel):

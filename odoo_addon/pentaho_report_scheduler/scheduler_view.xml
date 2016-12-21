@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Report Scheduler">
                 <header>
-                    <button name="button_run_now" string="Run Now" type="object" icon="STOCK_GO_FORWARD"/>
+                    <button name="button_run_now" string="Run Now" type="object"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -45,7 +45,7 @@
         <field name="arch" type="xml">
             <tree string="Report Scheduler" version="7.0">
                 <field name="name"/>
-                <button name="button_run_now" string="Run Now" type="object" icon="STOCK_GO_FORWARD"/>
+                <button name="button_run_now" string="Run Now" type="object"/>
             </tree>
         </field>
     </record>
