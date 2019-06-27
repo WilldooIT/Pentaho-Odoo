@@ -17,19 +17,19 @@
 
   <dependencies defaultconf="default_internal->default">
     <!-- reporting engine dependencies -->
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-core"
+    <dependency org="org.pentaho.reporting.engine" name="classic-core"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions"
+    <dependency org="org.pentaho.reporting.engine" name="classic-extensions"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions-scripting"
+    <dependency org="org.pentaho.reporting.engine" name="classic-extensions-scripting"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions-drill-down"
+    <dependency org="org.pentaho.reporting.engine" name="classic-extensions-drill-down"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions-toc"
+    <dependency org="org.pentaho.reporting.engine" name="classic-extensions-toc"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-wizard-core"
+    <dependency org="org.pentaho.reporting.engine" name="wizard-core"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-legacy-charts"
+    <dependency org="org.pentaho.reporting.engine" name="legacy-charts"
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
     
     <!-- Optional engine Dependencies
@@ -48,7 +48,7 @@
     -->
     
     <!-- Odoo Plugin Dependencies -->
-    <dependency org="pentaho-reporting-engine" name="pentaho-reporting-engine-classic-extensions-openerp" 
+    <dependency org="org.pentaho.reporting.engine" name="classic-extensions-openerp" 
                 rev="${pentaho-reporting.version}" transitive="true" changing="true"/>
     
     <dependency org="javax.servlet"      name="servlet-api"   rev="2.5"            transitive="false" />

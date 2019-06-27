@@ -4,7 +4,7 @@
 
 	<filter>
 		<filter-name>Pentaho boot-up checker</filter-name>
-		<filter-class>com.willowit.application.PentahoResourceChecker</filter-class>
+		<filter-class>com.willdooit.application.PentahoResourceChecker</filter-class>
 	</filter>
 
 	<filter-mapping>
@@ -13,7 +13,7 @@
 	</filter-mapping>
 	
 	<listener>
-		<listener-class>com.willowit.application.PentahoResourceManager</listener-class>
+		<listener-class>com.willdooit.application.PentahoResourceManager</listener-class>
 	</listener>
 
 	<servlet>

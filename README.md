@@ -1,3 +1,15 @@
+## Version 11
+
+As of Version 11, this public repository will be the place for hosting the java build code, and a place for logging issues for all versions.
+
+The Pentaho Odoo Connector and associated modules can be obtained through the Odoo App Store.  From there, you can acquire:
+
+* *pentaho_reports* **"Pentaho Reports for Odoo"**  The core of the Pentaho reports connector.  It is the module that provides communication between Odoo and Pentaho, and is the module which builds dynamic wizards to prompt for report variables.
+* *pentaho_report_selection_sets* **"Pentaho Report Selections Saving"**  An add on to "Pentaho Reports for Odoo" which allows parameters to be stored and recalled.  There are a number of formulae that can augment the parameter recall functionality in order to provide clever and dynamic default values.
+* *pentaho_report_scheduler* **"Pentaho Report Scheduler"**  An add on to "Pentaho Reports for Odoo" which allows reports to be scheduled in an Odoo cron process, with the results being sent to any number of contacts.
+* *pentaho_report_scheduler_selection_sets* **"Pentaho Report Scheduler Selection Sets"**  A bridging module which should be installed if both of the above optional modules are installed.
+
+
 ## Notes About Version 10
 
 * ** THIS MODULE IS YET TO BE WORKING WITH OBJECT REPORTS IN VERSION 10. **  This is probably needing work on the
@@ -7,7 +19,7 @@ java component of the actual designer and engine.  For the moment, it appears to
 * Advanced parameter functions is untested, but probably working.
 
 
-## A Summary of Recent Changes
+## A Summary of Recent Changes (Pre Version 11)
 
 A more detailed description of changes can be found on the [Pentaho Report for Odoo wiki](https://github.com/WilldooIT/Pentaho-Odoo/wiki/Significant-Changes "Pentaho Reports for Odoo Wiki")
 
@@ -38,6 +50,7 @@ This project provides a system that integrates Odoo with the Pentaho reporting s
 This project carries on from the previoust Pentaho Reports for OpenERP.
 
 ### Features:
+
 * Support for Odoo 9.0.
 * Support for OpenERP 6.1, 7.0, and 8.0.
 * Odoo data can be accessed via SQL, objects, custom python procedures, or via "Pentaho Data Integration" tools.
