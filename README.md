@@ -1,4 +1,4 @@
-## Version 11
+## Version 11 and Version 12
 
 As of Version 11, this public repository will be the place for hosting the java build code, and a place for logging issues for all versions.
 
@@ -22,6 +22,7 @@ The Pentaho Odoo Connector and associated modules can be obtained through the Od
 
 A more detailed description of changes can be found on the [Pentaho Report for Odoo wiki](https://github.com/WilldooIT/Pentaho-Odoo/wiki/Significant-Changes "Pentaho Reports for Odoo Wiki")
 
+* July 2019 - Upgrade of all modules to v12 and testing.
 * June 2019 - Upgrade of all modules to v11 and testing. Repository rename to willdooit-pentaho-odoo. Drop support of Object based reports.
 * December 2016 - Repository rename to Pentaho-Odoo in preparation for version 10.0 development.  Company references changed to WilldooIT.
 * February 2016 - Upgrade to support Odoo version 9.0.
