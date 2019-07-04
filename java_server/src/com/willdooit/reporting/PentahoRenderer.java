@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -240,6 +243,8 @@ public class PentahoRenderer {
 	}
 
 	private void typeCastAndStore(ReportParameterValues target, String parameter_type, String parameter_name, Object parameter_value) {
+		SimpleDateFormat sdf_d = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf_dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if(parameter_type.equals("java.lang.Long"))
 			target.put(parameter_name, new Long(((Integer) parameter_value)));
 		else if(parameter_type.equals("java.lang.Short"))
@@ -250,13 +255,40 @@ public class PentahoRenderer {
 			target.put(parameter_name, ((Double) parameter_value).floatValue());
 		else if(parameter_type.equals("java.math.BigDecimal"))
 			target.put(parameter_name, java.math.BigDecimal.valueOf(((Double) parameter_value)));
-		else if(parameter_type.equals("java.sql.Date"))
-			target.put(parameter_name, new java.sql.Date(((java.util.Date) parameter_value).getTime()));
-		else if(parameter_type.equals("java.sql.Time"))
-			target.put(parameter_name, new java.sql.Time(((java.util.Date) parameter_value).getTime()));
-		else if(parameter_type.equals("java.sql.Timestamp"))
-			target.put(parameter_name, new java.sql.Timestamp(((java.util.Date) parameter_value).getTime()));
-		else
+		else if(parameter_type.equals("java.sql.Date")) {
+			if (parameter_value instanceof String) {
+				try {
+					target.put(parameter_name, new java.sql.Date((sdf_d.parse((String) parameter_value)).getTime()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				target.put(parameter_name, new java.sql.Date(((java.util.Date) parameter_value).getTime()));
+			}
+		} else if(parameter_type.equals("java.sql.Time")) {
+			if (parameter_value instanceof String) {
+				try {
+					target.put(parameter_name, new java.sql.Time(sdf_dt.parse((String) parameter_value).getTime()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				target.put(parameter_name, new java.sql.Time(((java.util.Date) parameter_value).getTime()));
+			}
+		} else if(parameter_type.equals("java.sql.Timestamp")) {
+			if (parameter_value instanceof String) {
+				try {
+					target.put(parameter_name, new java.sql.Timestamp(sdf_dt.parse((String) parameter_value).getTime()));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				target.put(parameter_name, new java.sql.Timestamp(((java.util.Date) parameter_value).getTime()));
+			}
+		} else
 			target.put(parameter_name, parameter_value);
 	}
 

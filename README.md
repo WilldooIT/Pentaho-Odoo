@@ -53,6 +53,7 @@ This project carries on from the previous Pentaho Reports for OpenERP.
 
 ### Features:
 
+* Support for Odoo 12.
 * Support for Odoo 11.
 * Support for Odoo 9.0.
 * Support for OpenERP 6.1, 7.0, and 8.0.
